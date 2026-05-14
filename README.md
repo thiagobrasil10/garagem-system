@@ -80,3 +80,55 @@ Recebe eventos `ENTRY`, `PARKED` e `EXIT` do simulador, sempre respondendo `200 
 ## Collections
 
 - Para facilitar na montagem das requisições, o arquivo `Collection.har` contém exemplos de payloads para os endpoints, que podem ser importados no Postman ou Insomnia.
+
+- **cURL garage**:
+```bashcurl --request GET \
+  --url http://localhost:3003/garage \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=CF54BE60F51D10919ADEF89564DAC811' \
+  --header 'User-Agent: insomnia/12.5.0' \
+  --data ''
+```
+
+- **cURL revenue**:
+```bashcurl --request GET \
+  --url 'http://localhost:3003/revenue?sector=A&date=2025-01-01' \
+  --header 'Cookie: JSESSIONID=CF54BE60F51D10919ADEF89564DAC811' \
+  --header 'User-Agent: insomnia/12.5.0'
+```
+
+- **cURL webhook**:
+```bashcurl --request POST \
+  --url http://localhost:3003/webhook \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=CF54BE60F51D10919ADEF89564DAC811' \
+  --data '{
+  "license_plate": "ZUL0001",
+  "entry_time": "2025-01-01T12:00:00.000Z",
+  "event_type": "ENTRY"
+  }'
+```
+```bashcurl --request POST \
+  --url http://localhost:3003/webhook \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=CF54BE60F51D10919ADEF89564DAC811' \
+  --data '{
+  "license_plate": "ZUL0001",
+  "exit_time": "2025-01-01T23:00:00.000Z",
+  "event_type": "EXIT"
+  }'
+```
+```bashcurl --request POST \
+  --url http://localhost:3003/webhook \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: JSESSIONID=CF54BE60F51D10919ADEF89564DAC811' \
+  --data '{
+  "license_plate": "ZUL0001",
+  "lat": -23.561684,
+  "lng": -46.655981,
+  "event_type": "PARKED"
+  }'
+```
