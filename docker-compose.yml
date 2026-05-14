@@ -1,0 +1,26 @@
+services:
+  garage-sim:
+    image: cfontes0estapar/garage-sim:1.0.0
+    container_name: garagem-sim
+    ports:
+      - "3003:3003"
+
+  mysql:
+    image: mysql:8.0
+    container_name: garagem-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: garagem
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  mysql-data:
+
