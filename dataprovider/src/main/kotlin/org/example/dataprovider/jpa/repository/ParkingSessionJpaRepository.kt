@@ -12,6 +12,8 @@ interface ParkingSessionJpaRepository : JpaRepository<ParkingSessionEntity, Long
         plate: String,
     ): ParkingSessionEntity?
 
+    fun deleteAllByExitTimeIsNull()
+
     @Query(
         """
         select coalesce(sum(p.amountCharged), 0.0)

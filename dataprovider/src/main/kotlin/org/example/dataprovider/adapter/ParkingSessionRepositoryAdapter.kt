@@ -45,6 +45,11 @@ class ParkingSessionRepositoryAdapter(
         return jpa.sumRevenue(sector, start, end)
     }
 
+    @Transactional
+    override fun deleteAllOpen() {
+        jpa.deleteAllByExitTimeIsNull()
+    }
+
     private fun ParkingSession.toEntity() = ParkingSessionEntity(
         id = id,
         licensePlate = licensePlate,

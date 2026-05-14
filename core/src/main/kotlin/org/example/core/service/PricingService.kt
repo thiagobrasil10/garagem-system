@@ -13,9 +13,9 @@ import kotlin.math.ceil
  *      < 75%  -> 1.10
  *      <100%  -> 1.25
  *      =100%  -> setor fechado, entrada recusada.
- *  - Os 30 primeiros minutos são gratuitos.
- *  - Após 30 minutos, cobra-se por hora cheia (arredondamento para cima),
- *    inclusive a primeira hora.
+ *  - Os primeiros 30 minutos são gratuitos (spec V1.4).
+ *  - Após 30 minutos, cobra-se por hora cheia (ceil), inclusive a primeira hora.
+ *  - Duração 0 (ou negativa) resulta em 0.
  */
 object PricingService {
 
@@ -34,8 +34,8 @@ object PricingService {
         multiplier: Double,
     ): Double {
         val minutes = Duration.between(entry, exit).toMinutes()
-        if (minutes <= 30) return 0.0
-        val hours = ceil(minutes / 60.0).toInt().coerceAtLeast(1)
+        if (minutes <= 30) return 0.0                         // primeiros 30 min grátis
+        val hours = ceil(minutes / 60.0).toInt()
         val raw = hours * basePricePerHour * multiplier
         return Math.round(raw * 100.0) / 100.0
     }

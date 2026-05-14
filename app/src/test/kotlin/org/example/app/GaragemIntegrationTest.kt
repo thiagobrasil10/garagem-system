@@ -45,6 +45,13 @@ class GaragemIntegrationTest {
         assertThat(resp.statusCode.is2xxSuccessful).isTrue()
     }
 
+    private fun getJsonForMap(path: String, body: String): Map<*, *> {
+        val headers = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
+        val resp = rest.exchange(path, HttpMethod.GET, HttpEntity(body, headers), Map::class.java)
+        assertThat(resp.statusCode.is2xxSuccessful).isTrue()
+        return resp.body!!
+    }
+
     @Test
     fun `entry parked and exit flow then revenue`() {
         postJson(
@@ -60,10 +67,10 @@ class GaragemIntegrationTest {
             """{"license_plate":"ABC1234","exit_time":"2025-01-01T14:00:00Z","event_type":"EXIT"}"""
         )
 
-        // 2 horas * R$10 * 0.90 (multiplicador para 0% lotação) = 18.00
-        val resp = rest.getForObject(
-            "/revenue?sector=A&date=2025-01-01",
-            Map::class.java
+        // 120 min > 30 min (carência) → ceil(120/60) = 2 horas * R$10 * 0.90 (0% lotação) = 18.00
+        val resp = getJsonForMap(
+            "/revenue",
+            """{"date":"2025-01-01","sector":"A"}"""
         )
         assertThat(resp["amount"] as Number).isEqualTo(18.0)
         assertThat(resp["currency"]).isEqualTo("BRL")

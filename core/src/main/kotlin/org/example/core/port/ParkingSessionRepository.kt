@@ -8,5 +8,7 @@ interface ParkingSessionRepository {
     fun findOpenByPlate(plate: String): ParkingSession?
     fun update(session: ParkingSession): ParkingSession
     fun sumRevenueBySectorAndExitDate(sector: String, date: LocalDate): Double
+    /** Remove todas as sessões que ainda estão em aberto (sem exit_time). */
+    fun deleteAllOpen()
 }
 

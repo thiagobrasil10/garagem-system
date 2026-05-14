@@ -4,7 +4,9 @@ import org.example.core.port.GarageConfigProvider
 import org.example.core.port.ParkingSessionRepository
 import org.example.core.port.SectorRepository
 import org.example.core.port.SpotRepository
+import org.example.core.usecase.GetPlateStatusUseCase
 import org.example.core.usecase.GetRevenueUseCase
+import org.example.core.usecase.GetSpotStatusUseCase
 import org.example.core.usecase.HandleEntryUseCase
 import org.example.core.usecase.HandleExitUseCase
 import org.example.core.usecase.HandleParkedUseCase
@@ -24,7 +26,8 @@ class UseCaseConfig {
         provider: GarageConfigProvider,
         sectorRepository: SectorRepository,
         spotRepository: SpotRepository,
-    ) = LoadGarageUseCase(provider, sectorRepository, spotRepository)
+        sessionRepository: ParkingSessionRepository,
+    ) = LoadGarageUseCase(provider, sectorRepository, spotRepository, sessionRepository)
 
     @Bean
     fun handleEntryUseCase(
@@ -49,5 +52,16 @@ class UseCaseConfig {
     fun getRevenueUseCase(
         sessionRepository: ParkingSessionRepository,
     ) = GetRevenueUseCase(sessionRepository)
+
+    @Bean
+    fun getPlateStatusUseCase(
+        sessionRepository: ParkingSessionRepository,
+    ) = GetPlateStatusUseCase(sessionRepository)
+
+    @Bean
+    fun getSpotStatusUseCase(
+        spotRepository: SpotRepository,
+        sessionRepository: ParkingSessionRepository,
+    ) = GetSpotStatusUseCase(spotRepository, sessionRepository)
 }
 

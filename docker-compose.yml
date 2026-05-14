@@ -1,9 +1,12 @@
 services:
   garage-sim:
     image: cfontes0estapar/garage-sim:1.0.0
+    platform: linux/amd64
     container_name: garagem-sim
     ports:
-      - "3003:3003"
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mysql:
     image: mysql:8.0

@@ -21,14 +21,17 @@ class PricingServiceTest {
     @Test
     fun `first 30 minutes are free`() {
         val entry = Instant.parse("2025-01-01T12:00:00Z")
-        val exit = Instant.parse("2025-01-01T12:30:00Z")
-        assertEquals(0.0, PricingService.calculateCharge(entry, exit, 10.0, 1.0))
+        // exatamente 0 min -> grátis
+        assertEquals(0.0, PricingService.calculateCharge(entry, entry, 10.0, 1.0))
+        // exatamente 30 min -> grátis
+        val exit30 = Instant.parse("2025-01-01T12:30:00Z")
+        assertEquals(0.0, PricingService.calculateCharge(entry, exit30, 10.0, 1.0))
     }
 
     @Test
     fun `charge rounds hours up and applies multiplier`() {
         val entry = Instant.parse("2025-01-01T12:00:00Z")
-        // 31 minutos -> arredonda para 1 hora cheia
+        // 31 minutos -> 1 hora cheia (após carência de 30 min)
         val exit31 = Instant.parse("2025-01-01T12:31:00Z")
         assertEquals(10.0, PricingService.calculateCharge(entry, exit31, 10.0, 1.0))
 
