@@ -77,3 +77,6 @@ Recebe eventos `ENTRY`, `PARKED` e `EXIT` do simulador, sempre respondendo `200 
   com os 30 primeiros minutos gratuitos.
 - **Receita por setor/data**: soma `amountCharged` das sessões com `exit_time` no dia.
 
+## Collections
+
+- Para facilitar na montagem das requisições, o arquivo `Collection.har` contém exemplos de payloads para os endpoints, que podem ser importados no Postman ou Insomnia.
