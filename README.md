@@ -38,6 +38,11 @@ Ou utilize o `docker-compose.yml` deste projeto, que já mapeia a porta `3000` c
 ```bash
 docker compose up -d
 ```
+Ou
+```bash
+docker-compose compose up -d
+```
+(dependnendo da versão do Docker Compose instalada)
 
 ### 3. Subir a aplicação
 
@@ -305,4 +310,6 @@ curl -X GET http://localhost:3003/revenue \
 # Configuração da garagem
 curl http://localhost:3003/garage
 ```
-
+---
+## Swagger UI
+A documentação interativa da API está disponível em `http://localhost:3003/swagger-ui.html`

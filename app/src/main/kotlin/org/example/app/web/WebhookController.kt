@@ -1,6 +1,13 @@
 package org.example.app.web
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.ExampleObject
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.example.core.usecase.EntryResult
 import org.example.core.usecase.ExitResult
 import org.example.core.usecase.HandleEntryUseCase
@@ -9,6 +16,7 @@ import org.example.core.usecase.HandleParkedUseCase
 import org.example.core.usecase.ParkedResult
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
+@Tag(name = "Webhook", description = "Recebe eventos do simulador: ENTRY, PARKED e EXIT")
 @RestController
 @RequestMapping("/webhook")
 class WebhookController(
@@ -25,6 +34,26 @@ class WebhookController(
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
+    @Operation(
+        summary = "Receber evento do simulador",
+        description = "Aceita eventos do tipo ENTRY, PARKED e EXIT. Sempre retorna 200 para o simulador.",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                examples = [
+                    ExampleObject(name = "ENTRY", value = """{"license_plate":"ZUL0001","entry_time":"2026-05-18T12:00:00Z","event_type":"ENTRY"}"""),
+                    ExampleObject(name = "PARKED", value = """{"license_plate":"ZUL0001","lat":-23.561684,"lng":-46.655981,"event_type":"PARKED"}"""),
+                    ExampleObject(name = "EXIT", value = """{"license_plate":"ZUL0001","exit_time":"2026-05-18T14:30:00Z","event_type":"EXIT"}"""),
+                ]
+            )]
+        )
+    )
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "Evento processado com sucesso"),
+        ApiResponse(responseCode = "400", description = "Campo obrigatório ausente ou event_type inválido"),
+        ApiResponse(responseCode = "404", description = "Vaga não encontrada (PARKED)"),
+        ApiResponse(responseCode = "409", description = "Regra de negócio violada (duplicado, setor cheio, etc.)"),
+    )
     @PostMapping
     fun receive(@RequestBody event: WebhookEvent): ResponseEntity<WebhookResponse> {
         log.info("Webhook recebido: {}", event)

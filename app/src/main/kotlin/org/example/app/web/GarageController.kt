@@ -1,6 +1,9 @@
 package org.example.app.web
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.example.core.port.SectorRepository
 import org.example.core.port.SpotRepository
 import org.springframework.http.ResponseEntity
@@ -8,12 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-/**
- * Expõe a configuração atual da garagem (setores e vagas)
- * persistida no banco a partir do simulador.
- *
- * GET /garage
- */
+@Tag(name = "Garage", description = "Configuração da garagem persistida a partir do simulador")
 @RestController
 @RequestMapping("/garage")
 class GarageController(
@@ -21,6 +19,8 @@ class GarageController(
     private val spotRepository: SpotRepository,
 ) {
 
+    @Operation(summary = "Configuração da garagem", description = "Retorna todos os setores e vagas carregados do simulador no startup.")
+    @ApiResponse(responseCode = "200", description = "Configuração retornada com sucesso")
     @GetMapping
     fun getGarage(): ResponseEntity<GarageConfigResponse> {
         val sectors = sectorRepository.findAll().map {

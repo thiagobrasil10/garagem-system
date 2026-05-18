@@ -8,8 +8,7 @@ import org.example.core.port.GarageConfigProvider
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
-import java.time.Duration
+import org.springframework.web.client.RestClient
 
 @Component
 class GarageSimClient(
@@ -18,17 +17,16 @@ class GarageSimClient(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    private val webClient: WebClient = WebClient.builder()
+    private val restClient: RestClient = RestClient.builder()
         .baseUrl(baseUrl)
         .build()
 
     override fun fetchConfig(): GarageConfig {
         log.info("Buscando configuração da garagem em {}/garage", baseUrl)
-        val response = webClient.get()
+        val response = restClient.get()
             .uri("/garage")
             .retrieve()
-            .bodyToMono(GarageResponse::class.java)
-            .block(Duration.ofSeconds(10))
+            .body(GarageResponse::class.java)
             ?: error("Resposta vazia de /garage")
 
         return GarageConfig(
