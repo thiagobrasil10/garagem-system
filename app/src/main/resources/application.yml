@@ -6,6 +6,9 @@ spring:
     name: garagem-system
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:mysql}
+  threads:
+    virtual:
+      enabled: true
   jackson:
     serialization:
       write-dates-as-timestamps: false
