@@ -15,6 +15,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+    implementation("io.swagger.core.v3:swagger-models-jakarta:2.2.30")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
